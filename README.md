@@ -11,4 +11,4 @@ This software distribution consists of:
 
 - A Demonstration of autonomous robot operation (The Lego Rover)
 
-See http://www.csc.liv.ac.uk/~lad/legorover
+See http://www.csc.liv.ac.uk/~lad/legorovers
