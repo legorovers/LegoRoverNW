@@ -27,7 +27,6 @@ package eass.mas.nxt;
 
 import java.io.IOException;
 import lejos.nxt.remote.*;
-import lejos.pc.comm.*;
 import lejos.nxt.SensorConstants;
 import lejos.nxt.I2CPort;
 

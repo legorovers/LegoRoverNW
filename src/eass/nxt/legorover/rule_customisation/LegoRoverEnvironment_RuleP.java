@@ -445,15 +445,15 @@ public class LegoRoverEnvironment_RuleP extends EASSNXTEnvironment {
 				NXTBrick brick = getBrick();
 				EASSUltrasonicSensor uSensor = new EASSUltrasonicSensor(brick, 2);
 				setSensor(2, uSensor);
-				uSensor.setPrintStream(uPrintStream);
+				uSensor.setPrintStream(uPrintStream); 
 				
 			/*	EASSSoundSensor sSensor = new EASSSoundSensor(brick, 3);
 				setSensor(3, sSensor);
 				sSensor.setPrintStream(sPrintStream); */
 				
-				EASSLightSensor lSensor = new EASSLightSensor(brick, 1);
-				setSensor(1, lSensor);
-				lSensor.setPrintStream(lPrintStream);
+				EASSLightSensor lSensor = new EASSLightSensor(brick, 3);
+				setSensor(3, lSensor);
+				lSensor.setPrintStream(lPrintStream); 
 				
 				EASSTouchSensor tSensor = new EASSTouchSensor(brick, 4);
 				setSensor(4, tSensor);
@@ -496,7 +496,7 @@ public class LegoRoverEnvironment_RuleP extends EASSNXTEnvironment {
 		 */
 		public void setLPrintStream(PrintStream s) {
 			lPrintStream = s;
-			EASSSensor lSensor = getSensor(1);
+			EASSSensor lSensor = getSensor(3);
 			if (lSensor != null) {
 				lSensor.setPrintStream(s);
 			}
