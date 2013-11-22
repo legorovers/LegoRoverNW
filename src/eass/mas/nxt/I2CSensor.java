@@ -1,5 +1,4 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2013 Louise A. Dennis, and  Michael Fisher 
 //
 // This file is part of the Lego Rover Library.  But is heavily based on 
 // the implementation of I2CSensor that comes with leJOS.
@@ -18,8 +17,6 @@
 // License along with the EASS Library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
-// To contact the authors:
-// http://www.csc.liv.ac.uk/~lad
 //
 //----------------------------------------------------------------------------
 
