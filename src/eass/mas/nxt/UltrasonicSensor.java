@@ -27,7 +27,6 @@ package eass.mas.nxt;
 import lejos.robotics.RangeFinder;
 import lejos.util.Delay;
 import lejos.nxt.I2CPort;
-import lejos.nxt.remote.NXTCommand;
 
 /*
  * WARNING: THIS CLASS IS SHARED BETWEEN THE classes AND pccomms PROJECTS.

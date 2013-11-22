@@ -24,7 +24,6 @@
 
 package eass.mas.nxt;
 
-import lejos.nxt.remote.NXTCommand;
 import lejos.nxt.remote.NXTProtocol;
 import lejos.nxt.LegacySensorPort;
 import lejos.nxt.I2CPort;

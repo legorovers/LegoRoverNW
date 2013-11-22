@@ -28,9 +28,6 @@ import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 
-import lejos.nxt.remote.RemoteMotor;
-import lejos.nxt.remote.NXTCommand;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 

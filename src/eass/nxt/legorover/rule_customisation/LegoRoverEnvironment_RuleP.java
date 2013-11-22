@@ -41,8 +41,8 @@ import eass.mas.nxt.EASSLightSensor;
 import eass.mas.nxt.EASSSensor;
 import eass.mas.nxt.LegoRobot;
 import eass.mas.nxt.NXTBrick;
+import eass.mas.nxt.RemoteMotor;
 
-import lejos.nxt.remote.RemoteMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 
 import java.io.PrintStream;
