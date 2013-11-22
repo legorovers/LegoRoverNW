@@ -88,6 +88,15 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 	    
 	    // Wrapping the environment in a thread so events are handled faster.
 	    protected EnvironmentThread envThread = new EnvironmentThread();
+	    
+	    protected int speed=10;
+	    protected int rspeed=15;
+	    protected int dthreshold=50;
+	    protected int lthreshold=50;
+	    private boolean speedinit = false;
+	    private boolean rspeedinit = false;
+	    private boolean dtinit  = false;
+	    private boolean ltinit = false;
 	
 	    /**
 	     * Constructs the User Interface.
@@ -125,7 +134,7 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 	    	NumberFormat f = NumberFormat.getIntegerInstance(); 
 	    	f.setMaximumIntegerDigits(3);
 	    	speedbox = new JFormattedTextField(f);
-	    	speedbox.setValue(10);
+	    	speedbox.setValue(speed);
 	    	speedbox.setColumns(3);
 	    	speedbox.addPropertyChangeListener(this);
 	    	settings.add(speedbox);
@@ -136,7 +145,7 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 	    	NumberFormat f1 = NumberFormat.getIntegerInstance(); 
 	    	f1.setMaximumIntegerDigits(3);
 	    	rspeedbox = new JFormattedTextField(f1);
-	    	rspeedbox.setValue(15);
+	    	rspeedbox.setValue(rspeed);
 	    	rspeedbox.setColumns(3);
 	    	rspeedbox.addPropertyChangeListener(this);
 	    	settings.add(rspeedbox);
@@ -354,7 +363,7 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 		    	NumberFormat f2 = NumberFormat.getIntegerInstance(); 
 		    	f2.setMaximumIntegerDigits(3);
 		    	distancebox = new JFormattedTextField(f2);
-		    	distancebox.setValue(50);
+		    	distancebox.setValue(dthreshold);
 		    	distancebox.setColumns(3);
 		    	distancebox.addPropertyChangeListener(this);
 		    	ultra.add(distancebox);
@@ -426,7 +435,7 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 		    	NumberFormat f4 = NumberFormat.getIntegerInstance(); 
 		    	f4.setMaximumIntegerDigits(3);
 		    	lightbox = new JFormattedTextField(f4);
-		    	lightbox.setValue(50);
+		    	lightbox.setValue(lthreshold);
 		    	lightbox.setColumns(3);
 		    	lightbox.addPropertyChangeListener(this);
 		    	light.add(lightbox);
@@ -599,26 +608,36 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 			Object source = e.getSource();
 			
 			if (source == speedbox) {
-				Number speed = (Number) speedbox.getValue();
+				int new_speed = ((Number) speedbox.getValue()).intValue();
 			
-				Action act = new Action("speed");
-				act.addTerm(new NumberTermImpl(speed.intValue()));
+				if (new_speed != speed || !speedinit) {
+					Action act = new Action("speed");
+					speed = new_speed;
+					speedinit = true;
+				
+					act.addTerm(new NumberTermImpl(speed));
 			
-				try {
-					env.executeAction(rName, act);
-				} catch (Exception ex) {
-					System.err.println(ex.getMessage());
+					try {
+						env.executeAction(rName, act);
+					} catch (Exception ex) {
+						System.err.println(ex.getMessage());
+					}
 				}
 			} else if (source == rspeedbox) {
-				Number speed = (Number) rspeedbox.getValue();
+				int new_rspeed = ((Number) rspeedbox.getValue()).intValue();
 				
-				Action act = new Action("rspeed");
-				act.addTerm(new NumberTermImpl(speed.intValue()));
+				if (new_rspeed != rspeed || !rspeedinit) {
+					rspeed = new_rspeed;
+					rspeedinit = true;
 			
-				try {
-					env.executeAction(rName, act);
-				} catch (Exception ex) {
-					System.err.println(ex.getMessage());
+					Action act = new Action("rspeed");
+					act.addTerm(new NumberTermImpl(rspeed));
+			
+					try {
+						env.executeAction(rName, act);
+					} catch (Exception ex) {
+						System.err.println(ex.getMessage());
+					}
 				}
 				
 			} else if (source == distancebox) {

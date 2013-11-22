@@ -129,8 +129,8 @@ public class LegoRoverEnvironment_RuleP extends EASSNXTEnvironment {
 		   Unifier u = new Unifier();
 		   String rname = rationalName(agName);
 		   LegoRobot robot = getRobot(rname);
-		/*   System.err.println(act);
-		   System.err.println(agentmap.get("noor")); */
+		   System.err.println(act);
+		   /* System.err.println(agentmap.get("noor")); */
 		   
 		   			     
 		   	if (act.getFunctor().equals("forward")) {
