@@ -641,14 +641,20 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 				}
 				
 			} else if (source == distancebox) {
-				Number distance = (Number) distancebox.getValue();
+				int new_distance = ((Number) distancebox.getValue()).intValue();
 				
-				Action act = new Action("obstacle_distance");
-				act.addTerm(new NumberTermImpl(distance.intValue()));
-				try {
-					env.executeAction(rName, act);
-				} catch (Exception ex) {
-					System.err.println(ex.getMessage());
+				if (new_distance != dthreshold || !dtinit) {
+					dthreshold = new_distance;
+					dtinit = true;
+			
+				
+					Action act = new Action("obstacle_distance");
+					act.addTerm(new NumberTermImpl(dthreshold));
+					try {
+						env.executeAction(rName, act);
+					} catch (Exception ex) {
+						System.err.println(ex.getMessage());
+					}
 				}
 			} else if (source == soundbox) {
 				Number sound = (Number) soundbox.getValue();
@@ -661,14 +667,19 @@ public class LegoRoverUI_RuleP extends JPanel implements ActionListener, WindowL
 					System.err.println(ex.getMessage());
 				}
 			} else if (source == lightbox) {
-				Number light = (Number) lightbox.getValue();
+				int new_light = ((Number) lightbox.getValue()).intValue();
 				
-				Action act = new Action("light_intensity");
-				act.addTerm(new NumberTermImpl(light.intValue()));
-				try {
-					env.executeAction(rName, act);
-				} catch (Exception ex) {
-					System.err.println(ex.getMessage());
+				if (new_light != lthreshold || !ltinit) {
+					lthreshold = new_light;
+					ltinit = true;
+					
+					Action act = new Action("light_intensity");
+					act.addTerm(new NumberTermImpl(lthreshold));
+					try {
+						env.executeAction(rName, act);
+					} catch (Exception ex) {
+						System.err.println(ex.getMessage());
+					}
 				}
 			}
 						
