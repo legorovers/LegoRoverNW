@@ -338,9 +338,9 @@ public class LegoRoverUI extends JPanel implements ActionListener, WindowListene
 	    	}
 	    	
 	    	if (rName.equals("claudia")) {
-		    	config = new AILConfig("/src/examples/eass/nxt/legorover/simple/Claudia.ail");
+		    	config = new AILConfig("/src/eass/nxt/legorover/simple/Claudia.ail");
 	    	} else {
-	    		config = new AILConfig("/src/examples/eass/nxt/legorover/simple/Noor.ail");
+	    		config = new AILConfig("/src/eass/nxt/legorover/simple/Noor.ail");
 	    	}
 			AIL.configureLogging(config);
 		
