@@ -24,6 +24,11 @@
 env = eass.nxt.legorover.rule_customisation.LegoRoverEnvironment_RuleP
 mas.file = /src/eass/nxt/legorover/rule_customisation/noor_rulep.eass
 mas.builder = eass.EASSMASBuilder
+// Noor
+// nxt.robotAddress = 00165312A8AB
+// Karen
+// nxt.robotAddress = 0016530F94C9
+// Claudia
 nxt.robotAddress = 001653111619
 
 log.warning = ajpf.MCAPLAgent
