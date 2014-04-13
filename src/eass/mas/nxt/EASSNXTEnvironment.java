@@ -45,7 +45,7 @@ public class EASSNXTEnvironment extends DefaultEASSEnvironment {
 	boolean connectingtobricks = true;
 	String holdingaddress;
 	HashMap<String, String> namesandaddresses = new HashMap<String, String>();;
-	HashMap<String, LegoRobot> robots = new HashMap<String, LegoRobot>();
+	public HashMap<String, LegoRobot> robots = new HashMap<String, LegoRobot>();
 
 	/**
 	 * Constructor 

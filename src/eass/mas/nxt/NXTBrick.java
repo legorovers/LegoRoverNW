@@ -166,7 +166,14 @@ public class NXTBrick  {
             out = new DataOutputStream(comm.getOutputStream());
             in = new DataInputStream(comm.getInputStream());
     }
+    
+    public DataOutputStream getDataOutputStream() {
+    	return out;
+    }
 
+    public DataInputStream getDataInputStream() {
+    	return in;
+    }
 
 	public void close() {
 		try {
