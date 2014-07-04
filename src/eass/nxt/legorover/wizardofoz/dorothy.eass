@@ -29,9 +29,10 @@ EASS
 :Initial Beliefs:
 
 distance_threshold(50)
-sound_threshold(50)
-light_threshold(50)
-
+wllight_threshold(35)
+wulight_threshold(45)
+bllight_threshold(0)
+bulight_threshold(30)
 
 :Initial Goals:
 
@@ -41,66 +42,228 @@ light_threshold(50)
 +.received(:perform, G): {True} <- +!G [perform];
 +.received(:achieve, G): {True} <- +!G [achieve];
 
-+distance(D) : {~B obstacle, B distance_threshold(V), D < V} <- assert_shared(obstacle);
++distance(D) : {B obstaclerule(R), B active(R), ~B obstacle, B distance_threshold(V), D < V} <- assert_shared(obstacle);
++distance(D) : {B obstaclegoalrule(R), B active(R), ~B obstacle, B distance_threshold(V), D < V} <- assert_shared(obstacle);
++distance(D) : {B guard(R, obstacle), B active(R), ~B obstacle, B distance_threshold(V), D < V} <- assert_shared(obstacle);
++distance(D) : {B guard(R, not(obstacle)), B active(R), ~B obstacle, B distance_threshold(V), D < V} <- assert_shared(obstacle);
 +distance(D) : {B obstacle, B distance_threshold(V), V < D} <- remove_shared(obstacle);
 
-+bump : {~B obstacle_at_back} <- assert_shared(obstacle_at_back);
--bump : {B obstacle_at_back} <- remove_shared(obstacle_at_back);
++light(L) : { B waterrule(R), B active(R),  ~B water, B wulight_threshold(T), L < T, B wllight_threshold(T1), T1 < L} <- assert_shared(water);
++light(L) : { B watergoalrule(R), B active(R),  ~B water, B wulight_threshold(T), L < T, B wllight_threshold(T1), T1 < L} <- assert_shared(water);
++light(L) : { B guard(R, water), B active(R),  ~B water, B wulight_threshold(T), L < T, B wllight_threshold(T1), T1 < L} <- assert_shared(water);
++light(L) : { B guard(R, not(water)), B active(R),  ~B water, B wulight_threshold(T), L < T, B wllight_threshold(T1), T1 < L} <- assert_shared(water);
++light(L) : { B water, B wulight_threshold(T), T < L} <- remove_shared(water);
++light(L) : { B water, B wllight_threshold(T), L < T} <- remove_shared(water);
 
-+sound(S) : {~B sound, B sound_threshold(T), S < T} <- assert_shared(sound);
-+sound(S) : {B sound, B sound_threshold(T), T < S} <- remove_shared(sound);
++light(L) : { B river_bedrule(R), B active(R), ~B river_bed, B bulight_threshold(T), L < T, B bllight_threshold(T1), T1 < L} <- assert_shared(river_bed);
++light(L) : { B river_bedgoalrule(R), B active(R), ~B river_bed, B bulight_threshold(T), L < T, B bllight_threshold(T1), T1 < L} <- assert_shared(river_bed);
++light(L) : { B guard(R, river_bed), B active(R), ~B river_bed, B bulight_threshold(T), L < T, B bllight_threshold(T1), T1 < L} <- assert_shared(river_bed);
++light(L) : { B guard(R, not(river_bed)), B active(R), ~B river_bed, B bulight_threshold(T), L < T, B bllight_threshold(T1), T1 < L} <- assert_shared(river_bed);
++light(L) : { B river_bed, B bulight_threshold(T), T < L, ~B following_line} <- remove_shared(river_bed);
++light(L) : { B river_bed, B bllight_threshold(T), L < T, ~B following_line} <- remove_shared(river_bed);
 
-+light(L) : {~B mineral, B light_threshold(T), L < T} <- assert_shared(mineral);
-+light(L) : { B mineral, B light_threshold(T), T < L} <- remove_shared(mineral);
++completed(A) : {B done(B)} <- remove_shared(done(B)), assert_shared(done(A));
++completed(A) : {~ B done(B)} <- assert_shared(done(A));
 
 +! stop [perform] : {True} <-
-	stop;
-+! right90 [perform] : {True} <-
-    right90;
-+! backward10 [perform] : {True} <-
-    backward10;
-+! forward10 [perform] : {True} <-
-    forward10;
-+! left90 [perform] : {True} <-
-    left90;
+   stop,
+   assert_shared(done);
 +! forward [perform] : {True} <-
-    forward;
+    forward,
+    assert_shared(done);
++! backward [perform] : {True} <-
+    backward,
+    assert_shared(done);
++! left [perform] : {True} <-
+    left,
+    assert_shared(done);
++! right [perform] : {True} <-
+    right,
+    assert_shared(done);
+
++! right_90 [perform] : {True} <-
+    right90,
+    assert_shared(done);
++! backward_10 [perform] : {True} <-
+    backward10,
+    assert_shared(done);
++! forward_10 [perform] : {True} <-
+    forward10,
+    assert_shared(done);
++! left_90 [perform] : {True} <-
+    left90,
+    assert_shared(done);
+
++! random_turn [perform] : {True} <-
+    random_turn,
+    assert_shared(done);
++! random_forward [perform] : {True} <-
+    random_forward,
+    assert_shared(done);
+
++! follow_line [perform] : {True} <-
+   follow_line,
+   assert_shared(done);
+
++! do_nothing [perform] : {True} <-
+   do_nothing,
+   assert_shared(done),
+   assert_shared(done(do_nothing));
 
 +change_distance(D) : {B distance_threshold(D1)} <-
     -distance_threshold(D1),
     +distance_threshold(D);
-+change_intensity(D) : {B light_threshold(D1)} <-
-    -light_threshold(D1),
-    +light_threshold(D);
++change_wlintensity(D) : {B wllight_threshold(D1)} <-
+    -wllight_threshold(D1),
+    +wllight_threshold(D);
++change_wuintensity(D) : {B wulight_threshold(D1)} <-
+    -wulight_threshold(D1),
+    +wulight_threshold(D);
++change_blintensity(D) : {B bllight_threshold(D1)} <-
+    -bllight_threshold(D1),
+    +bllight_threshold(D);
++change_buintensity(D) : {B bulight_threshold(D1)} <-
+    -bulight_threshold(D1),
+    +bulight_threshold(D);
 
 :name: noor
 
 :Initial Beliefs:
 
+guard(none)
+completion(forward_10, forwardN)
+completion(random_forward, forwardN)
+completion(backward_10, backwardN)
+completion(random_turn, rightN)
+completion(right_90, rightN)
+completion(left_90, leftN)
+completion(follow_line, some_action)
+completion(forward, some_action)
+completion(backward, some_action)
+completion(left, some_action)
+completion(right, some_action)
+completion(stop, some_action)
+completion(do_nothing, do_nothing)
+
+always_done(do_nothing)
+
+
 :Belief Rules:
+
+B guard(water) :- B water;
+B guard(river_bed) :- B river_bed;
+B guard(obstacle) :- B obstacle;
+B guard(not(water)) :- ~ (B water);
+B guard(not(river_bed)) :- ~ (B river_bed);
+B guard(not(obstacle)) :- ~ (B obstacle);
+B done(CA, R) :- B interrupt(R);
+B done(CA, R) :- B done(CA), B doing(CA, R);
+B done(CA, R) :- B always_done(CA);
+
+B released_other_actions(A) :- ~(B waiting(A, R));
 
 :Initial Goals:
 
 :Plans:
 
-+obstacle : {B obstaclerule(R), B active(R), B rule(R, act1, A), B rule(R, act2, B)} <-
-    perf(A),
-    perf(B);
-+obstacle_at_back : {B bumprule(R), B active(R), B rule(R, act1, A), B rule(R, act2, B)} <-
-    perf(A),
-    perf(B);
-+sound : {B soundrule(R), B active(R), B rule(R, act1, A), B rule(R, act2, B)} <-
-    perf(A),
-    perf(B);
-+mineral : {B mineralrule(R), B active(R), B rule(R, act1, A), B rule(R, act2, B)} <-
-    perf(A),
-    perf(B);
-+obstacle : {B obstaclerule(R), B active(R), B rule(R, act1, A), ~B rule(R, act2, B)} <-
-    perf(A);
-+obstacle_at_back : {B bumprule(R), B active(R), B rule(R, act1, A), ~B rule(R, act2, B)} <-
-    perf(A);
-+sound : {B soundrule(R), B active(R), B rule(R, act1, A), ~B rule(R, act2, B)} <-
-    perf(A);
-+mineral : {B mineralrule(R), B active(R), B rule(R, act1, A), ~B rule(R, act2, B)} <-
-    perf(A);
-    
++! note_interrupts [perform] : {True} <-
+   +.lock,
+   +interrupt(rule1), +interrupt(rule2), +interrupt(rule3), +interrupt(rule4), +interrupt(rule5), +interrupt(rule6), 
+   +interrupt(rule7), +interrupt(rule8),
+   -.lock;
+
++obstacle : {B obstaclerule(R), ~B activated(R), B guard(R, G), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+	  +.lock,
+	  +activated(R), 
+	  +!note_interrupts [perform],
+	  -.lock,
+    +!handle(then(A,R)) [perform],
+    +!handle(then(B,R)) [perform],
+    +!handle(C) [perform],
+    -activated(R);
++water : {B waterrule(R), B guard(R, G), ~B activated(R), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+	  +.lock,
+	  +activated(R), 
+	  +!note_interrupts [perform],
+	  -.lock,
+    +!handle(then(A, R)) [perform],
+    +!handle(then(B, R)) [perform],
+    +!handle(C) [perform],
+    -activated(R);
++river_bed : {B river_bedrule(R), ~B activated(R), B guard(R, G), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+	  +.lock,
+	  +activated(R), 
+	  +!note_interrupts [perform],
+	  -.lock,
+	  +!note_interrupts [perform],
+    +!handle(then(A, R)) [perform],
+    +!handle(then(B, R)) [perform],
+    +!handle(C) [perform],
+    -activated(R);
++!obstacle [achieve] : {B obstaclegoalrule(R), B guard(R, G), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+    +!handle(then(A, R)) [perform],
+    +!handle(then(B, R)) [perform],
+    +!handle(C) [perform],
+    +!note_achieved(obstacle) [perform];
++!water [achieve] : {B watergoalrule(R), B guard(R, G), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+    +!handle(then(A, R)) [perform],
+    +!handle(then(B, R)) [perform],
+    +!handle(C) [perform],
+    +!note_achieved(water) [perform];
++!river_bed [achieve] : {B river_bedgoalrule(R), B guard(R, G), B guard(G), B active(R), B rule(R, act1, A), B rule(R, act2, B), B rule(R, act3, C)} <-
+    +!handle(then(A, R)) [perform],
+    +!handle(then(B, R)) [perform],
+    +!handle(C) [perform],
+    +!note_achieved(river_bed) [perform];
+
++! note_achieved(X) [perform] : {B X} <- 
+   print(achieved(X));
++! note_achieved(X) [perform] : {True};
+
++! obstacle [achieve]: {True} <- print(no_plan), +! handle(action(do_nothing)) [perform];
++! water [achieve]: {True} <- print(no_plan), +! handle(action(do_nothing)) [perform];
++! river_bed [achieve]: {True} <- print(no_plan), +! handle(action(do_nothing)) [perform];
+
++ interrupted: {True} <-
+  printagentstate,
+	  +!note_interrupts [perform],
+  remove_shared(interrupted);
+
++! handle(action(A)) [perform] : {True} <-
+   remove_shared(done),
+   perf(A),
+   *done;
++! handle(then(action(A), R)) [perform] : {B completion(A, CA), ~ B doing(CA, R1)} <-
+   +.lock,
+   -interrupt(R),
+   remove_shared(done),
+   remove_shared(interrupted),
+   +doing(CA, R),
+   -.lock,
+   perf(A),
+   -interrupt(R),
+   *done(CA, R),
+   +.lock,
+   -doing(CA, R),
+   remove_shared(done(CA)),
+   +! released_other_actions(A) [achieve],
+   -.lock;
++! handle(then(action(A, R))) [perform] : {B completion(A, CA), B doing(CA, R1)} <- print(e), +waiting(A, R), *released(A, R), -released(A, R);
++! handle(new_goal(B)) [perform] : {True} <-
+   print(j),
+   +! B [achieve];
++! handle(then(new_goal(B), R)) [perform] : {True} <-
+   print(k),
+   +! B [achieve];
+
++! released_other_actions(A) [achieve] : {B waiting(A, R)} <-
+   +.lock,
+   +relased(A, R),
+   -waiting(A, R),
+   -.lock;
+
++new_goal(none) : {B user_goal(G)} <- -user_goal(G), -! G [achieve];
++new_goal(none) : {~ B user_goal(G)};
++new_goal(G) : {B user_goal(G)};
++new_goal(G) : {B user_goal(G2)} <- +.lock, print(g), +user_goal(G), -user_goal(G2), -! G2 [achieve], -.lock, +! G [achieve];
++new_goal(G) : {~B user_goal(G2)} <- print(h), +user_goal(G), +! G [achieve];

@@ -324,15 +324,9 @@ public class DefaultEASSEnvironment extends DefaultEnvironment implements MCAPLJ
 //			System.err.println(agName + " has flag");
 //			int size = 0;
 			List<Literal> agl = agSharedBeliefs.get(agName);
-//			if (agl != null) {
-//				size += agl.size();
-//			}
-//			List<Literal> p = new ArrayList<Literal>(size);
-			// System.err.println(agName + "accessed shared beliefs");
 			//If this is to update an agent rather than looking for model checking purposes
 			if (update) {
 				if (uptodateAgs.contains(agName)) {
-//					System.err.println("returning null");
 					AJPFLogger.finer("eass.mas.DefaultEASSEnvironment", "Shared beliefs returning null to " + agName);
 					return null;
 				}
@@ -354,7 +348,11 @@ public class DefaultEASSEnvironment extends DefaultEnvironment implements MCAPLJ
 						
 		    				
 			if (agl != null) { // add agent personal perception
-				p.addAll(agl);
+				try {
+					p.addAll(agl);
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
 			}
 	    			
 			//return p;

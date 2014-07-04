@@ -84,7 +84,7 @@ public class NXTBrick  {
 		} catch (NXTCommException e) {
 			System.out.println("Could not open Bluetooth connection to " + btname + "(" + btaddress + ")");
 			connected = false;
-		} 
+		}  
 		
 		if (connected) {
 			nxtcommand = new NXTCommand(comm);
