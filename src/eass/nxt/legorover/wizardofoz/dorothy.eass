@@ -62,52 +62,41 @@ bulight_threshold(30)
 +light(L) : { B river_bed, B bulight_threshold(T), T < L, ~B following_line} <- remove_shared(river_bed);
 +light(L) : { B river_bed, B bllight_threshold(T), L < T, ~B following_line} <- remove_shared(river_bed);
 
-+completed(A) : {B done(B)} <- remove_shared(done(B)), assert_shared(done(A));
-+completed(A) : {~ B done(B)} <- assert_shared(done(A));
++completed(A) : {~ B done(A)} <- assert_shared(done(A)), -completed(A);
++completed(A) : {B done(A)} <- print(help(A));
 
 +! stop [perform] : {True} <-
-   stop,
-   assert_shared(done);
+   stop;
 +! forward [perform] : {True} <-
-    forward,
-    assert_shared(done);
+    forward;
 +! backward [perform] : {True} <-
-    backward,
-    assert_shared(done);
+    backward;
 +! left [perform] : {True} <-
-    left,
-    assert_shared(done);
+    left;
 +! right [perform] : {True} <-
-    right,
-    assert_shared(done);
+    right;
 
 +! right_90 [perform] : {True} <-
-    right90,
-    assert_shared(done);
+    right90;
 +! backward_10 [perform] : {True} <-
-    backward10,
-    assert_shared(done);
-+! forward_10 [perform] : {True} <-
-    forward10,
-    assert_shared(done);
+    backward10;
++! forward_1 [perform] : {True} <-
+    forward1;
++! forward_3 [perform] : {True} <-
+    forward3;
 +! left_90 [perform] : {True} <-
-    left90,
-    assert_shared(done);
+    left90;
 
 +! random_turn [perform] : {True} <-
-    random_turn,
-    assert_shared(done);
+    random_turn;
 +! random_forward [perform] : {True} <-
-    random_forward,
-    assert_shared(done);
+    random_forward;
 
 +! follow_line [perform] : {True} <-
-   follow_line,
-   assert_shared(done);
+   follow_line;
 
 +! do_nothing [perform] : {True} <-
    do_nothing,
-   assert_shared(done),
    assert_shared(done(do_nothing));
 
 +change_distance(D) : {B distance_threshold(D1)} <-
@@ -131,7 +120,8 @@ bulight_threshold(30)
 :Initial Beliefs:
 
 guard(none)
-completion(forward_10, forwardN)
+completion(forward_1, forwardN)
+completion(forward_3, forwardN)
 completion(random_forward, forwardN)
 completion(backward_10, backwardN)
 completion(random_turn, rightN)
@@ -226,17 +216,16 @@ B released_other_actions(A) :- ~(B waiting(A, R));
 
 + interrupted: {True} <-
   printagentstate,
-	  +!note_interrupts [perform],
+  +!note_interrupts [perform],
   remove_shared(interrupted);
 
++! handle(action(do_nothing)) [perform] : {True} <- print(doing_nothing);
++! handle(then(action(do_nothing))) [perform] : {True} <- print(doing_nothing);
 +! handle(action(A)) [perform] : {True} <-
-   remove_shared(done),
-   perf(A),
-   *done;
+   perf(A);
 +! handle(then(action(A), R)) [perform] : {B completion(A, CA), ~ B doing(CA, R1)} <-
    +.lock,
    -interrupt(R),
-   remove_shared(done),
    remove_shared(interrupted),
    +doing(CA, R),
    -.lock,
@@ -248,19 +237,19 @@ B released_other_actions(A) :- ~(B waiting(A, R));
    remove_shared(done(CA)),
    +! released_other_actions(A) [achieve],
    -.lock;
-+! handle(then(action(A, R))) [perform] : {B completion(A, CA), B doing(CA, R1)} <- print(e), +waiting(A, R), *released(A, R), -released(A, R);
++! handle(then(action(A), R)) [perform] : {B completion(A, CA), B doing(CA, R1)} <- 
+   print(e), +waiting(A, R), *released(A, R), -waiting(A, R), -released(A, R);
 +! handle(new_goal(B)) [perform] : {True} <-
-   print(j),
    +! B [achieve];
 +! handle(then(new_goal(B), R)) [perform] : {True} <-
-   print(k),
    +! B [achieve];
 
 +! released_other_actions(A) [achieve] : {B waiting(A, R)} <-
    +.lock,
-   +relased(A, R),
-   -waiting(A, R),
+   +released(A, R),
    -.lock;
++! released_other_actions(A) [achieve] : {~B waiting(A, R)} <-
+   dally;
 
 +new_goal(none) : {B user_goal(G)} <- -user_goal(G), -! G [achieve];
 +new_goal(none) : {~ B user_goal(G)};

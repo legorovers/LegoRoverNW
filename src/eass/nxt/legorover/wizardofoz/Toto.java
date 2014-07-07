@@ -247,7 +247,7 @@ public class Toto {
 			}
 			
 			Thread.sleep(10);
-			
+		
 			out.writeInt(lightvalue);
 			out.flush();
 			out.writeInt(ultravalue);

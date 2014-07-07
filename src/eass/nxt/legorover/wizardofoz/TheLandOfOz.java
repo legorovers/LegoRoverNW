@@ -72,6 +72,26 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 	
 	Random r = new Random();
 	
+	static final int follow_line = 1;
+	static final int forward = 2;
+	static final int stop = 3;
+	static final int left = 4;
+	static final int right = 5;
+	static final int backward = 6;
+	static final int backwardN = 7;
+	static final int rightN = 8;
+	static final int leftN = 9;
+	static final int forwardN = 10;
+	static final int speedC = 11;
+	static final int rspeedC = 12;
+	static final int closed = 13;
+	
+	boolean[] waiting = {true, false, false, false, 
+			false, false, false, false,
+			false, false, false, false,
+			false};
+	int waitingN = 0;
+	
 	/**
 	 * Construct the Environment.
 	 */
@@ -139,7 +159,7 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		Literal g = new Literal("guard");
 		g.addTerm(new Literal(rulename));
 		g.addTerm(new Literal(guard));
-		System.err.println(g);
+		// System.err.println(g);
 		addSharedBelief(agent, g);
 	}
 	
@@ -147,7 +167,7 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		Literal g = new Literal("guard");
 		g.addTerm(new Literal(rulename));
 		g.addTerm(guard);
-		System.err.println(g);
+		// System.err.println(g);
 		addSharedBelief(agent, g);
 	}
 
@@ -169,10 +189,13 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		removeSharedBelief(agent, rule);
 	}
 
-	
+	int oldccc = 100;
 	public void eachrun() {
 		for (LegoRobot r: robots.values()) {
 			try {
+				
+				//if (r.getBrick().getDataInputStream().available() > 0) {
+				//	System.err.println(r.getBrick().getDataInputStream().available());
 				int lightvalue = r.getBrick().getDataInputStream().readInt();
 				// System.err.println("lightvalue is " + lightvalue);
 				((Karen) r).setLightValue(lightvalue);
@@ -191,17 +214,24 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 					ccc.addTerm(new Literal("leftN"));
 				} else if (commandcompletecode == 10) {
 					ccc.addTerm(new Literal("forwardN"));
-					// System.err.println(ccc);
-					// System.err.println(agentmap.get("noor"));
 				} else {
 					ccc.addTerm(new Literal("some_action"));
 				}
 				
-				addUniquePercept("noor", ccc);
+				if (waitingN == commandcompletecode) {
+					System.err.println(commandcompletecode);
+					addMessage("abstraction_noor", new ail.syntax.Message(1, "env", "abstraction_noor", ccc));
+					oldccc = commandcompletecode;
+					waiting[commandcompletecode] = false;
+					waitingN = 100;
+				}
+				//} else {
+				//	System.err.println("No waiting data");
+				//}
 				
 						
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 		}
 		
@@ -232,6 +262,7 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		   String rname = rationalName(agName);
 		   Karen robot = (Karen) getRobot(rname);
 		   AJPFLogger.info(logname, act.toString());	
+		   // eachrun();
 		   			     
 		   // Movement Actions sent to robot.
 		   if (act.getFunctor().equals("stop")) {
@@ -261,13 +292,17 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		   		removeSharedBelief(rname, new Literal("following_line"));
 		   		robot.backward(10);
 		   		count_limit = 100;
-		   	} else if (act.getFunctor().equals("forward10") || act.getFunctor().equals("forward_10")) {
+		   	} else if (act.getFunctor().equals("forward1") || act.getFunctor().equals("forward_1")) {
 		   		removeSharedBelief(rname, new Literal("following_line"));
-		   		robot.forward(10);
+		   		robot.forward(1);
+		   		count_limit = 100;
+		   	} else if (act.getFunctor().equals("forward3") || act.getFunctor().equals("forward_3")) {
+		   		removeSharedBelief(rname, new Literal("following_line"));
+		   		robot.forward(3);
 		   		count_limit = 100;
 		   	} else if (act.getFunctor().equals("random_turn")) {
 		   		removeSharedBelief(rname, new Literal("following_line"));
-		   		int angle = r.nextInt(360);
+		   		int angle = r.nextInt(60);
 		   		robot.right(angle);	
 		   		count_limit = 10*angle;
 		   	} else if (act.getFunctor().equals("random_forward")) {
@@ -558,7 +593,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void follow_line() {
 			// System.out.println("Following Line");
 			try {
-				getBrick().getDataOutputStream().writeInt(1);
+				waiting[0] = true;
+				waitingN = 0;
+				getBrick().getDataOutputStream().writeInt(follow_line);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
 				System.err.println(e.getStackTrace());
@@ -568,7 +605,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void forward() {
 			// System.out.println("Forward");
 			try {
-				getBrick().getDataOutputStream().writeInt(2);
+				waiting[0] = true;
+				waitingN = 0;
+				getBrick().getDataOutputStream().writeInt(forward);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
 				System.err.println(e.getStackTrace());
@@ -578,7 +617,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void stop() {
 			// System.out.println("Stop");
 			try {
-				getBrick().getDataOutputStream().writeInt(3);
+				waiting[0] = true;
+				waitingN = 0;
+				getBrick().getDataOutputStream().writeInt(stop);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
 				System.err.println(e.getStackTrace());
@@ -588,7 +629,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void left() {
 			// System.out.println("Left");
 			try {
-				getBrick().getDataOutputStream().writeInt(4);
+				waiting[0] = true;
+				waitingN = 0;
+				getBrick().getDataOutputStream().writeInt(left);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
 				System.err.println(e.getStackTrace());
@@ -599,6 +642,8 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void right() {
 			// System.out.println("Right");
 			try {
+				waiting[0] = true;
+				waitingN = 0;
 				getBrick().getDataOutputStream().writeInt(5);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
@@ -610,6 +655,8 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void backward() {
 			// System.out.println("Backward");
 			try {
+				waiting[0] = true;
+				waitingN = 0;
 				getBrick().getDataOutputStream().writeInt(6);
 				getBrick().getDataOutputStream().flush();
 			} catch (Exception e) {
@@ -622,7 +669,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void backward(int distance) {
 			// System.out.println("Reverse " + distance);
 			try {
-				getBrick().getDataOutputStream().writeInt(7);
+				waiting[backwardN] = true;
+				waitingN = backwardN;
+				getBrick().getDataOutputStream().writeInt(backwardN);
 				getBrick().getDataOutputStream().flush();
 				getBrick().getDataOutputStream().writeInt(distance);
 				getBrick().getDataOutputStream().flush();
@@ -635,7 +684,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void right(int angle) {
 			System.out.println("Right " + angle);
 			try {
-				getBrick().getDataOutputStream().writeInt(8);
+				waiting[rightN] = true;
+				waitingN = rightN;
+				getBrick().getDataOutputStream().writeInt(rightN);
 				getBrick().getDataOutputStream().flush();
 				getBrick().getDataOutputStream().writeInt(angle);
 				getBrick().getDataOutputStream().flush();
@@ -648,7 +699,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void left(int angle) {
 			System.out.println("Left " + angle);
 			try {
-				getBrick().getDataOutputStream().writeInt(9);
+				waiting[leftN] = true;
+				waitingN = leftN;
+				getBrick().getDataOutputStream().writeInt(leftN);
 				getBrick().getDataOutputStream().flush();
 				getBrick().getDataOutputStream().writeInt(angle);
 				getBrick().getDataOutputStream().flush();
@@ -661,7 +714,9 @@ public class TheLandOfOz extends EASSNXTEnvironment {
 		public void forward(int distance) {
 			//  System.out.println("Forward " + distance);
 			try {
-				getBrick().getDataOutputStream().writeInt(10);
+				waiting[forwardN] = true;
+				waitingN = forwardN;
+				getBrick().getDataOutputStream().writeInt(forwardN);
 				getBrick().getDataOutputStream().flush();
 				getBrick().getDataOutputStream().writeInt(distance);
 				getBrick().getDataOutputStream().flush();

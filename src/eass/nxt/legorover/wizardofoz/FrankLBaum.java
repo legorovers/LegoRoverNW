@@ -94,8 +94,8 @@ public class FrankLBaum extends JPanel implements ActionListener, WindowListener
 	    protected String[] bevents = {"BELIEF obstacle", "BELIEF water", "BELIEF river bed"};
 	    protected String[] gevents = {"GOAL water", "GOAL river bed", "GOAL obstacle"};
 	    protected String[] guards = {"Anything", "BELIEVE obstacle", "BELIEVE water", "BELIEVE river bed", "DON'T BELIEVE obstacle", "DON'T BELIEVE water", "DON'T BELIEVE river bed"};
-	    protected String[] actions = {"do nothing", "stop", "forward 10", "backward 10", "right 90", 
-	    		"left 90", "forward", "backward", "right", "left", "follow line", "random turn", "random forward", "ACHIEVE GOAL river bed", "ACHIEVE GOAL water"};
+	    protected String[] actions = {"do nothing", "stop", "forward 1", "forward 3", "backward 10", "right 90", 
+	    		"left 90", "forward", "backward", "right", "left", "follow line", "random turn", "ACHIEVE GOAL river bed", "ACHIEVE GOAL water"};
 	    protected ArrayList<String> teleop_commands = new ArrayList<String>();
 	    
 	    // The delay before instructions reach the robot, the environment and the default robot name.
@@ -178,9 +178,9 @@ public class FrankLBaum extends JPanel implements ActionListener, WindowListener
 	    	createRule(c, rules, r3button);
 	    	createRule(c, rules, r4button);
 	    	createRule(c, rules, r5button);
-	    	createRule(c, rules, r6button);
-	    	createRule(c, rules, r7button);
-	    	createRule(c, rules, r8button);
+	    	// createRule(c, rules, r6button);
+	    	// createRule(c, rules, r7button);
+	    	// createRule(c, rules, r8button);
 	    	
 	    	// A JPanel for Goals
 	    	JPanel goals = new JPanel();
@@ -558,7 +558,7 @@ public class FrankLBaum extends JPanel implements ActionListener, WindowListener
 	        c.gridy = ypos;
 	        rules.add(eventbox, c);	        
 	        
-	        JLabel and = new JLabel(" And ");
+	        /* JLabel and = new JLabel(" And ");
 	        c.gridx = 3;
 	        c.gridy = ypos;
 	        rules.add(and, c);
@@ -569,7 +569,7 @@ public class FrankLBaum extends JPanel implements ActionListener, WindowListener
 	        c.gridx = 4;
 	        c.gridy = ypos;
 	        rules.add(guardbox, c);
-	        
+	        */
 
 	        
 	        JLabel then = new JLabel("Then");
